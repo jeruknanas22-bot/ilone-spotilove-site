@@ -19,10 +19,17 @@ body{
   background:#121212;
   color:white;
   display:flex;
-  height:100vh;
-  overflow:hidden;
+  min-height:100vh;
+  overflow-x:hidden;
 }
 
+.main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  overflow-y:auto;
+}
+  
 /* SIDEBAR */
 .sidebar{
   width:230px;
@@ -695,4 +702,5 @@ highlightActiveTrack();
 </script>
 
 </body>
+
 </html>
