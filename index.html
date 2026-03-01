@@ -223,7 +223,7 @@ body{
 
 .memory-grid img{
   width:100%;
-  aspect-ratio:1/1;
+  aspect-ratio:3/4;
   object-fit:cover;
   border-radius:12px;
   cursor:pointer;
@@ -516,7 +516,7 @@ body{
 
 </div>
 
-<audio id="audio"></audio>
+<audio id="audio" preload="metadata"></audio>
 
 <script>
 
@@ -535,28 +535,44 @@ const songs = [
 let currentSongIndex = 0;
 let playing = false;
 
-let likedPhotos = JSON.parse(localStorage.getItem("likedPhotos")) || {};
+let likedPhotos = {};
+
+try{
+  likedPhotos = JSON.parse(localStorage.getItem("likedPhotos")) || {};
+}catch(e){
+  likedPhotos = {};
+}
 let currentPhoto = "";
 
 /* ================= PLAY / CHANGE SONG ================= */
 
 function changeSong(index){
   currentSongIndex = index;
+
   audio.src = songs[index];
-  audio.play();
-  playing = true;
+
   highlightActiveTrack();
+
+  audio.play().then(()=>{
+    playing = true;
+  }).catch(err=>{
+    console.log("Playback blocked:", err);
+  });
 }
 
 function togglePlay(){
-  if(audio.src === "" || audio.src === window.location.href){
+
+  if(!audio.src){
     audio.src = songs[currentSongIndex];
   }
 
-  if(!playing){
-    audio.play();
-    playing = true;
-  }else{
+  if(audio.paused){
+    audio.play().then(()=>{
+      playing = true;
+    }).catch(err=>{
+      console.log("Playback blocked:", err);
+    });
+  } else {
     audio.pause();
     playing = false;
   }
@@ -723,5 +739,4 @@ highlightActiveTrack();
 </script>
 
 </body>
-
 </html>
